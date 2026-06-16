@@ -1,0 +1,36 @@
+name: Update World Cup Scores
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Runs every 2 hours automatically
+  workflow_dispatch: # Adds a button so you can run it manually anytime
+
+permissions:
+  contents: write
+
+jobs:
+  scrape-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests lxml html5lib
+
+      - name: Run scraper script
+        run: python scraper.py
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add teamStats.json
+          git commit -m "Automated score update" || exit 0
+          git push
