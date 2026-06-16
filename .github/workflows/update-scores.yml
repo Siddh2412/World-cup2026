@@ -2,21 +2,25 @@ name: Update World Cup Scores
 
 on:
   schedule:
-    - cron: '0 */2 * * *' # Runs every 2 hours automatically
-  workflow_dispatch: # Adds a button so you can run it manually anytime
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
+
+# 👇 This completely silences the Node 20 warning
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
 
 jobs:
   scrape-data:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # 👈 Upgraded to v4
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # 👈 Upgraded to v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
